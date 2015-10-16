@@ -5,7 +5,9 @@
  */
 var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
+    personHandler = require('./persons.server.controller.js'),
 	Draw = mongoose.model('Draw'),
+	Person = mongoose.model('Person'),
 	_ = require('lodash');
 
 /**
@@ -88,7 +90,7 @@ exports.list = function(req, res) {
  * Draw middleware
  */
 exports.drawByID = function(req, res, next, id) {
-	Draw.findById(id).populate('user', 'displayName').exec(function(err, draw) {
+	Draw.findById(id).populate('participants').exec(function(err, draw) {
 		if (err) return next(err);
 		if (!draw) return next(new Error('Failed to load draw ' + id));
 		req.draw = draw;
@@ -106,4 +108,31 @@ exports.hasAuthorization = function(req, res, next) {
 		});
 	}
 	next();
+};
+
+/**
+ * Add Participant to Draw
+ */
+exports.addParticipant = function(req, res) {
+    var draw = req.draw;
+    var name = req.body.name;
+    var email = req.body.email;
+
+    personHandler.createByName(name, email, function(newPerson) {
+        if (newPerson) {
+            draw.participants.push({_id: newPerson._id});
+            draw.save(function (err) {
+                if (err) {
+                    res.status(500).send({message: errorHandler.getErrorMessage(err)});
+                } else {
+                    res.status(200).send({
+                        message: 'Participant ajouté',
+                        draw: draw
+                    });
+                }
+            });
+        } else {
+            res.status(500).send({message: 'Erreur durant ajout de participant'});
+        }
+    });
 };

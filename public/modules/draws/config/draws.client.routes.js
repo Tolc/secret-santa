@@ -3,23 +3,23 @@
 // Setting up route
 angular.module('draws').config(['$stateProvider',
 	function($stateProvider) {
-		// Articles state routing
+		// Draws state routing
 		$stateProvider.
 		state('listDraws', {
 			url: '/draws',
 			templateUrl: 'modules/draws/views/list-draws.client.view.html'
+		}).
+		state('createDraw', {
+			url: '/draws/create',
+			templateUrl: 'modules/draws/views/create-draw.client.view.html'
+		}).
+		state('viewDraw', {
+			url: '/draws/:drawId',
+			templateUrl: 'modules/draws/views/view-draw.client.view.html'
 		});
-		//state('createArticle', {
-		//	url: '/articles/create',
-		//	templateUrl: 'modules/articles/views/create-article.client.view.html'
-		//}).
-		//state('viewArticle', {
-		//	url: '/articles/:articleId',
-		//	templateUrl: 'modules/articles/views/view-article.client.view.html'
-		//}).
-		//state('editArticle', {
-		//	url: '/articles/:articleId/edit',
-		//	templateUrl: 'modules/articles/views/edit-article.client.view.html'
+		//state('editDraw', {
+		//	url: '/draws/:drawId/edit',
+		//	templateUrl: 'modules/draws/views/edit-draw.client.view.html'
 		//});
 	}
 ]);

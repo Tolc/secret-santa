@@ -17,6 +17,9 @@ module.exports = function(app) {
 		.put(users.requiresLogin, draws.hasAuthorization, draws.update)
 		.delete(users.requiresLogin, draws.hasAuthorization, draws.delete);
 
+    app.route('/draws/:drawId/add-participant')
+        .post(users.requiresLogin, draws.addParticipant);
+
 	// Finish by binding the article middleware
 	app.param('drawId', draws.drawByID);
 };

@@ -7,14 +7,12 @@
 			<small class="list-group-item-text">
 				Posted on
 				<span data-ng-bind="draw.created | date:'mediumDate'"></span>
-				by
-				<span data-ng-bind="draw.user.displayName"></span>
 			</small>
 			<h4 class="list-group-item-heading" data-ng-bind="draw.title"></h4>
 			<p class="list-group-item-text" data-ng-bind="draw.content"></p>
 		</a>
 	</div>
-	<div class="alert alert-warning text-center" data-ng-if="draws.$resolved && !draws.length">
-		No draws yet, why don't you <a href="/#!/draws/create">create one</a>?
+	<div class="alert alert-warning text-center">
+		<a href="/#!/draws/create">Créer un nouveau tirage</a>
 	</div>
 </section>

@@ -10,6 +10,16 @@ var mongoose = require('mongoose'),
  * Draw Schema
  */
 var DrawSchema = new Schema({
+    title: {
+        type: String,
+        default: '',
+        trim: true,
+        required: 'Title cannot be blank'
+    },
+    created: {
+        type: Date,
+        default: Date.now
+    },
     participants: [{
         type: Schema.ObjectId,
         ref: 'Person'
