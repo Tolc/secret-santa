@@ -24,7 +24,7 @@ var DrawSchema = new Schema({
         type: Schema.ObjectId,
         ref: 'Person'
     }],
-    items: [{
+    iterations: [{
         type: Schema.ObjectId,
         ref: 'DrawIteration'
     }]

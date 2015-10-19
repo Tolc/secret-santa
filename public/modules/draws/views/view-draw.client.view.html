@@ -51,7 +51,14 @@
             <h2>
                 <strong>I</strong>tération de tirage
             </h2>
-            <p><a target="_blank" href="http://expressjs.com/"> Express</a> is an app server. Check out <a target="_blank" href="http://expressjs.com/guide.html">The Express Guide</a> or <a target="_blank" href="http://stackoverflow.com/questions/8144214/learning-express-for-node-js">StackOverflow</a> for more info.</p>
+            <p><a data-ng-click="iterate()">Lancer le tirage</a></p>
+            <div class="row" data-ng-repeat="iteration in draw.iterations">
+                <ul>
+                    <li data-ng-repeat="item in iteration.items">
+                        {{item.fromUser.name}} --> {{item.toUser.name}}
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </section>

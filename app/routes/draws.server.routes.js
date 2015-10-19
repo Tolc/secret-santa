@@ -20,6 +20,9 @@ module.exports = function(app) {
     app.route('/draws/:drawId/add-participant')
         .post(users.requiresLogin, draws.addParticipant);
 
+	app.route('/draws/:drawId/iterate')
+		.post(users.requiresLogin, draws.iterate);
+
 	// Finish by binding the article middleware
 	app.param('drawId', draws.drawByID);
 };

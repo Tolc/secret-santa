@@ -55,13 +55,21 @@ angular.module('draws').controller('DrawsController', ['$scope', '$http', '$stat
         $scope.addParticipant = function() {
             $http.post('/draws/' + $scope.draw._id + '/add-participant', {
                 name: $scope.name,
-                email: $scope.email,
+                email: $scope.email
             }).success(function(response) {
                 $scope.draw = response.draw;
                 $scope.name = '';
                 $scope.email = '';
             }).error(function(response) {
             });
-        }
+        };
+
+		$scope.iterate = function() {
+			$http.post('/draws/' + $scope.draw._id + '/iterate', {}).success(function(response) {
+				$scope.draw = response.draw;
+				console.log($scope.draw);
+			}).error(function(response) {
+			});
+		};
 	}
 ]);
