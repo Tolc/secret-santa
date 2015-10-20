@@ -21,7 +21,15 @@ var PersonSchema = new Schema({
 		default: '',
 		trim: true,
         required: 'Email cannot be blank'
-	}
+	},
+	marriedTo: {
+		type: Schema.ObjectId,
+		ref: 'Person'
+	},
+	children: [{
+		type: Schema.ObjectId,
+		ref: 'Person'
+	}]
 });
 
 mongoose.model('Person', PersonSchema);

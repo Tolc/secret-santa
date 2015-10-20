@@ -71,5 +71,30 @@ angular.module('draws').controller('DrawsController', ['$scope', '$http', '$stat
 			}).error(function(response) {
 			});
 		};
+
+		$scope.addChild = function() {
+			$http.post('/persons/' + $scope.parentId + '/add-child', {
+				childId: $scope.childId
+			}).success(function(response) {
+				console.log(response.child);
+				$scope.childId = '';
+				$scope.parentId = '';
+			}).error(function(response) {
+				console.log(response);
+			});
+		};
+
+		$scope.addMarriage = function() {
+			console.log('lol');
+			$http.post('/persons/' + $scope.marriageFirst + '/add-marriage', {
+				marriageLast: $scope.marriageLast
+			}).success(function(response) {
+				console.log(response.child);
+				$scope.marriageFirst = '';
+				$scope.marriageLast = '';
+			}).error(function(response) {
+				console.log(response);
+			});
+		};
 	}
 ]);

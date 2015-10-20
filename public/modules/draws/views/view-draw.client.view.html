@@ -23,7 +23,15 @@
             </h2>
             <p>
                 <ul>
-                    <li data-ng-repeat="participant in draw.participants">{{participant.name}} <{{participant.email}}></li>
+                    <li data-ng-repeat="participant in draw.participants">
+                        {{participant.name}} <{{participant.email}}>
+                        <span data-ng-show="participant.marriedTo">-> {{participant.marriedTo.name}}</span>
+                        <ul>
+                            <li data-ng-repeat="child in participant.children">
+                                {{child.name}}
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </p>
             <form name="participantAddForm" data-ng-submit="addParticipant()">
@@ -45,6 +53,40 @@
                         <strong data-ng-bind="error">Erreur</strong>
                     </div>
                 </fieldset>
+            </form>
+
+            <br/>
+            <form name="addChildForm" data-ng-submit="addChild()">
+                <select name="parentId" id="parentId" data-ng-model="parentId" required>
+                    <option value="">rien</option>
+                    <option data-ng-repeat="option in draw.participants" value="{{option._id}}">
+                        {{option.name}}
+                    </option>
+                </select>
+                <select name="childId" id="childId" data-ng-model="childId" required>
+                    <option value="">rien</option>
+                    <option data-ng-repeat="option in draw.participants" value="{{option._id}}">
+                        {{option.name}}
+                    </option>
+                </select>
+                <input type="submit" class="btn btn-default" value="Ajouter un enfant">
+            </form>
+
+            <br/>
+            <form name="addMarriageForm" data-ng-submit="addMarriage()">
+                <select name="marriageFirst" id="marriageFirst" data-ng-model="marriageFirst" required>
+                    <option value="">rien</option>
+                    <option data-ng-repeat="option in draw.participants" value="{{option._id}}">
+                        {{option.name}}
+                    </option>
+                </select>
+                <select name="marriageLast" id="marriageLast" data-ng-model="marriageLast" required>
+                    <option value="">rien</option>
+                    <option data-ng-repeat="option in draw.participants" value="{{option._id}}">
+                        {{option.name}}
+                    </option>
+                </select>
+                <input type="submit" class="btn btn-default" value="Ajouter un mariage">
             </form>
         </div>
         <div class="col-md-9">

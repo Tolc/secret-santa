@@ -114,8 +114,24 @@ exports.drawByID = function(req, res, next, id) {
 							if (err) {
 								return next(new Error('Failed to load Draw ' + id));
 							} else {
-								req.draw = draw;
-								next();
+								Person.populate(draw, {
+									path: 'participants.children'
+								}, function (err, draw) {
+									if (err) {
+										return next(new Error('Failed to load Draw ' + id));
+									} else {
+										Person.populate(draw, {
+											path: 'participants.marriedTo'
+										}, function (err, draw) {
+											if (err) {
+												return next(new Error('Failed to load Draw ' + id));
+											} else {
+												req.draw = draw;
+												next();
+											}
+										});
+									}
+								});
 							}
 						});
 					}
@@ -168,14 +184,55 @@ exports.addParticipant = function(req, res) {
 exports.iterate = function(req, res) {
 	var draw = req.draw;
 	var participants = draw.participants;
+	participants.sort(function(a, b) {
+		var al = a.children.length;
+		if (a.marriedTo) al++;
+		var bl = b.children.length;
+		if (b.marriedTo) bl++;
+		if (al > bl)
+			return -1;
+		if (al < bl)
+			return 1;
+		return 0;
+	});
 	var nb = participants.length;
 	var receivers = [];
 	var alreadyReceiving = [];
 	if (nb > 1) {
 		for (var i = 0; i < nb; i++) {
 			var j = i;
-			while (j === i || alreadyReceiving.indexOf(j) > -1) {
+
+			var loops = 0;
+			var inChildren = false;
+			var married = false;
+			while (married || inChildren || j === i || alreadyReceiving.indexOf(j) > -1) {
 				j = Math.floor(Math.random() * nb);
+
+				var participant = participants[i];
+
+				married = false;
+				if (participant.marriedTo) {
+					if (participant.marriedTo._id.equals(participants[j]._id)) {
+						married = true;
+					}
+				}
+
+				if (!married) {
+					//Not in children
+					inChildren = false;
+					for (var k = 0; k < participant.children.length; k++) {
+						if (participant.children[k]._id.equals(participants[j]._id)) {
+							inChildren = true;
+							break;
+						}
+					}
+				}
+
+
+				if(loops++ > 10000) {
+					res.status(500).send({message: 'Erreur de boucle'});
+					break;
+				}
 			}
 			alreadyReceiving.push(j);
 			receivers[i] = participants[j];
@@ -222,7 +279,19 @@ exports.iterate = function(req, res) {
 											path: 'iterations.items.toUser'
 										}, function(err, redraw) {
 											if (!err) {
-												res.status(200).send({draw: redraw});
+												Person.populate(redraw, {
+													path: 'participants.children'
+												}, function (err, redraw) {
+													if (!err) {
+														Person.populate(redraw, {
+															path: 'participants.marriedTo'
+														}, function (err, redraw) {
+															if (!err) {
+																res.status(200).send({draw: redraw});
+															}
+														});
+													}
+												});
 											}
 										});
 									}

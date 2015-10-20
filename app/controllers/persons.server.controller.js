@@ -88,7 +88,7 @@ exports.list = function(req, res) {
  * Person middleware
  */
 exports.personByID = function(req, res, next, id) {
-	Person.findById(id).populate('user', 'displayName').exec(function(err, person) {
+	Person.findById(id).populate('children').populate('marriedTo').exec(function(err, person) {
 		if (err) return next(err);
 		if (!person) return next(new Error('Failed to load person ' + id));
 		req.person = person;
@@ -113,9 +113,6 @@ exports.hasAuthorization = function(req, res, next) {
  * Creates a Person
  */
 exports.createByName = function(name, email, callback) {
-    console.log(name);
-    console.log(email);
-    console.log('ol');
     var newPerson = new Person({
         name: name,
         email: email
@@ -127,4 +124,54 @@ exports.createByName = function(name, email, callback) {
             callback(newPerson);
         }
     });
+};
+
+
+exports.addChild = function(req, res) {
+	var person = req.person;
+	var childId = req.body.childId;
+
+	person.children.push({_id: childId});
+	person.save(function(err) {
+		if (err) {
+			res.status(500).send({message: 'Erreur durant sauvegarde personne'});
+		} else {
+			Person.findById(childId).populate('children').populate('marriedTo').exec(function(err, personDb) {
+				if (err) {
+					res.status(500).send({message: 'Erreur personne ' + childId});
+				} else {
+					res.status(200).send({child: personDb});
+				}
+			});
+		}
+	});
+};
+
+exports.addMarriage = function(req, res) {
+	var person = req.person;
+	var secondId = req.body.marriageLast;
+
+	Person.findById(secondId).populate('children').populate('marriedTo').exec(function(err, personDb) {
+		if (err) {
+			res.status(500).send({message: 'Erreur personne ' + secondId});
+		} else {
+			person.marriedTo = personDb;
+			personDb.marriedTo = person;
+			person.save(function(err) {
+				if (err) {
+					res.status(500).send({message: 'Erreur durant sauvegarde personne'});
+				} else {
+					personDb.save(function(err) {
+						if (err) {
+							res.status(500).send({message: 'Erreur durant sauvegarde personne'});
+						} else {
+							res.status(200).send({});
+						}
+					});
+				}
+			});
+		}
+	});
+
+
 };
