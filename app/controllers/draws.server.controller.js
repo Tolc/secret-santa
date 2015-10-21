@@ -229,7 +229,7 @@ exports.iterate = function(req, res) {
 				}
 
 
-				if(loops++ > 10000) {
+				if(loops++ > 10000 && j !== i) {
 					res.status(500).send({message: 'Erreur de boucle'});
 					break;
 				}

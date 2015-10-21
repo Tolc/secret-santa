@@ -95,7 +95,11 @@
             </h2>
             <p><a data-ng-click="iterate()">Lancer le tirage</a></p>
             <div class="row" data-ng-repeat="iteration in draw.iterations">
-                <ul>
+                <span data-ng-bind="iteration.created | date:'mediumDate'"></span>
+                <a href="#" data-ng-click="sendMail(iteration)">Envoyer les mails</a>
+                <a href="#" data-ng-hide="iteration.show" data-ng-click="showIteration(iteration)">Montrer le détail</a>
+                <a href="#" data-ng-show="iteration.show" data-ng-click="showIteration(iteration)">Cacher le détail</a>
+                <ul data-ng-show="iteration.show">
                     <li data-ng-repeat="item in iteration.items">
                         {{item.fromUser.name}} --> {{item.toUser.name}}
                     </li>

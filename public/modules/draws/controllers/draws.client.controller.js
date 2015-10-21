@@ -85,7 +85,6 @@ angular.module('draws').controller('DrawsController', ['$scope', '$http', '$stat
 		};
 
 		$scope.addMarriage = function() {
-			console.log('lol');
 			$http.post('/persons/' + $scope.marriageFirst + '/add-marriage', {
 				marriageLast: $scope.marriageLast
 			}).success(function(response) {
@@ -96,5 +95,17 @@ angular.module('draws').controller('DrawsController', ['$scope', '$http', '$stat
 				console.log(response);
 			});
 		};
+
+        $scope.sendMail = function(iteration) {
+            $http.post('/iterations/' + iteration._id + '/sendMail', {}).success(function(response) {
+                console.log(response);
+            }).error(function(response) {
+                console.log(response);
+            });
+        };
+
+        $scope.showIteration = function(iteration) {
+            iteration.show = !iteration.show;
+        };
 	}
 ]);

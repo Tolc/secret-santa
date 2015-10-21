@@ -5,6 +5,7 @@
  */
 var users = require('../../app/controllers/users.server.controller'),
 	draws = require('../../app/controllers/draws.server.controller'),
+	iterations = require('../../app/controllers/drawIterations.server.controller'),
 	persons = require('../../app/controllers/persons.server.controller');
 
 module.exports = function(app) {
@@ -35,5 +36,9 @@ module.exports = function(app) {
 
 	app.param('personId', persons.personByID);
 
+    app.param('iterationId', iterations.drawIterationByID);
+
+    app.route('/iterations/:iterationId/sendMail')
+        .post(users.requiresLogin, iterations.sendMail);
 
 };
