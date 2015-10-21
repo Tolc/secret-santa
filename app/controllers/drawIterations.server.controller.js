@@ -148,10 +148,8 @@ exports.sendMail = function(req, res) {
     var mailCallback = function (error, response) {
         if (error) {
             console.log(error);
-            errors++;
         } else {
             console.log('Message sent: ' + response.message);
-            oks++;
         }
     };
 
